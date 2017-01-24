@@ -38,10 +38,24 @@ function FishermansFriend() {
 	this._imgEl = undefined;
 	this._quizEl = undefined;
 	this._learnEl = undefined;
+	this._answersEl = undefined;
+	this._quizImageEl = undefined;
+
+	// quiz
+	this._whatToTest = "";
+	this._quizData = Array();
+	this._possibleAnswers = 3;
+	this._btnDefaultClass = "w3-btn w3-tiny w3-white w3-border w3-border-blue";
+	this._btnRightClass = "w3-btn w3-tiny w3-green w3-border w3-border-blue";
+	this._btnFalseClass = "w3-btn w3-tiny w3-red w3-border w3-border-blue";
 }
 
 FishermansFriend.prototype = {
 	constructor: FishermansFriend,
+
+	_randomize: function(max) {
+		return Math.floor(Math.random()*max);
+	},
 
 	_orderByCategory: function () {
 		var tmp = Array();
@@ -84,6 +98,8 @@ FishermansFriend.prototype = {
 			this._learnEl = document.getElementById("learn");
 			this._hunameEl = document.getElementById("hu_name");
 			this._detailsEl = document.getElementById("details");
+			this._answersEl = document.getElementById("answers");
+			this._quizImageEl = document.getElementById("quizImage");
 		}
 	},
 
@@ -101,6 +117,7 @@ FishermansFriend.prototype = {
 	},
 
 	// hide 'quiz' div and show 'learn' div
+	// reorder the _fishes array if needed
 	_browse: function (ordering) {
 		if(typeof this._quizEl !== 'undefined') {
 			this._quizEl.style.display = 'none';
@@ -122,7 +139,7 @@ FishermansFriend.prototype = {
 		this.displayFishData();
 	},
 	// hide 'learn' div and show 'quiz' div
-	_learn: function () {
+	_learn: function (what) {
 	
 		if(typeof this._quizEl !== 'undefined') {
 			this._quizEl.style.display = 'block';
@@ -133,6 +150,9 @@ FishermansFriend.prototype = {
 		if(typeof this._mainmenuEl !== 'undefined') {
 			this._mainmenuEl.style.display = 'none';
 		}
+		
+		this._whatToTest = what;
+		this._testIt();
 	},
 
 	// based on https://gist.github.com/alisterlf/3490957 [BlackCode7]
@@ -153,14 +173,14 @@ FishermansFriend.prototype = {
 	  return str.join('');
 	},
 
-	generateImageFileName: function () {
+	generateImageFileName: function (hu_name) {
 		this._fishImage = this._fishImageFolder;
-		this._fishImage += this.removeAccents(this._fishes[this._c]["hu_name"].toLowerCase());
+		this._fishImage += this.removeAccents(hu_name.toLowerCase());
 		this._fishImage += this._fishImageExt;
 	},
 
 	displayFishImage: function () {
-		this.generateImageFileName();
+		this.generateImageFileName(this._fishes[this._c]["hu_name"]);
 		this._imgEl.src = this._fishImage;
 	},
 
@@ -176,7 +196,6 @@ FishermansFriend.prototype = {
 		}
 
 		var txt = "<table id='limits' class='details_table'><tbody><tr>";
-		//txt += "<td colspan='4'>"+ct+"</td></tr>";
 		txt += "<tr>";
 		txt += "<td><img src='kepek/fc16.png' />";
 		txt += ""+((ss=="0")?this._textNoParam:ss+" - "+es)+"</td>";
@@ -185,8 +204,27 @@ FishermansFriend.prototype = {
 		txt += "<td><img src='kepek/fq16.png' />";
 		txt += ""+((ql=="0")?this._textNoParam:ql+this._textQuantity)+"</td>";
 		txt += "</tr></tbody></table>";
-		if (typeof this._hunameEl !== 'undefined') {
+		if (typeof this._detailsEl !== 'undefined') {
 			this._detailsEl.innerHTML = txt;
+		}
+	},
+
+	displayQuizImage: function (idx) {
+		this._quizImageEl.src = this._quizData[idx]["img"];
+	},
+
+	displayQuizData: function () {
+		if (typeof this._answersEl !== 'undefined') {
+			for(i=0; i<this._quizData.length; i++) {
+				var btn = document.createElement("span");
+				btn.appendChild(document.createTextNode(this._quizData[i]["data"]));
+				btn.className = this._btnDefaultClass;
+				btn.id = i;
+				// use .bind(this) here to be able to access this object's this._rightAnswer
+				// member variable from within the onclick callback
+				btn.addEventListener("click", this._checkIt.bind(this));
+				this._answersEl.appendChild(btn);
+			}
 		}
 	},
 
@@ -210,6 +248,54 @@ FishermansFriend.prototype = {
 
 		this.displayFishImage();
 		this.displayFishData();
+	},
+
+	_testIt: function () {
+		var rnd ;
+
+		this._quizData.length = 0;
+		this._answersEl.innerHTML = "";
+
+		// get random items from _fishes
+		for(i=0; i<this._possibleAnswers; i++) {
+			rnd = this._randomize(this._countOfFishes);
+
+			this.generateImageFileName(this._fishes[rnd]["hu_name"]);
+
+			var d = this._whatToTest.split(":");
+			var str = "";
+
+			if(d.length==1) {
+				str = this._fishes[rnd][d[0]];
+			}
+			else {
+				for(j=0; j<d.length; j++) {
+					str += this._fishes[rnd][d[j]];
+					if(j<d.length-1) {
+						str += " - ";
+					}
+				}
+			}
+			this._quizData[i] = {"img": this._fishImage, "data": str};
+		}
+		// again new random item but now from the 3 collected above
+		rnd = this._randomize(this._possibleAnswers);
+		this._rightAnswer = rnd;
+		this.displayQuizImage(rnd);
+		this.displayQuizData();
+		console.log(this._rightAnswer);
+	},
+
+	_checkIt: function (evt) {
+		var el = evt.target;
+		// user clicked on the right answer
+		if(el.id==this._rightAnswer) {
+			el.className = this._btnRightClass;
+		}
+		else {
+			el.className = this._btnFalseClass;
+			document.getElementById(this._rightAnswer).className = this._btnRightClass;
+		}
 	}
 };
 

@@ -21,11 +21,11 @@
 	</div>
 	<div class="w3-panel">
 		<h2>Tesztek</h2>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Halak felismerése</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Tilalmi időszakok</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Méretkorlátok</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Mennyiségi korlátok</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Minden adat</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name');">Halak felismerése</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('close_season_start:close_season_end');">Tilalmi időszakok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('size_limit');">Méretkorlátok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('qty_limit');">Mennyiségi korlátok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name:close_season_start:close_season_end:size_limit:qty_limit');">Minden adat</button></p>
 	</div>
 	<div class="w3-display-bottom w3-small w3-padding-tiny" style="text-align:justify;">Az adatokat a <a href="https://www.nebih.gov.hu/data/cms/164/591/Horgaszvizsgara_valo_felkeszulest_segito_tankonyv_1.4.pdf" target="_blank">NÉBIH horgászvizsgára felkészítő tankönyvéből</a> és a Wikipédia magyar oldalairól gyűjtöttem. A képeket is a tankönyvből másoltam ki, melyek <span style="font-style:italic;">Dr. Harka Ákos</span> felvételei.</div>
 </div>
@@ -41,9 +41,9 @@
 </div>
 <div id="quiz" class="w3-content w3-display-container" style="display:none">
 	<div class="w3-display-container mySlides">
-		<img id="info" src="kepek/amur.png" style="width:100%">
-		<div style="z-index:999;" id="hu_name" class="w3-display-topmiddle w3-container w3-black w3-xxlarge"></div>
-		<div style="width:100%" id="size_limit" class="w3-display-topright w3-container w3-black"></div>
+		<img id="home" class="w3-display-topright" src="kepek/house.png" onclick="f._home();" style="cursor:pointer;z-index:1000;"></img>
+		<img id="quizImage" style="width:100%">
+		<div id="answers" class="w3-display-topleft"></div>
 	</div>	
 </div>
 <script type="text/javascript">
