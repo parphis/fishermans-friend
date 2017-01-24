@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="w3.css">
+<link rel="stylesheet" type="text/css" href="fish.css">
+<script type="text/javascript" src="halak.js"></script>
+<script type="text/javascript" src="hv.js"></script>
+<script type="text/javascript">
+	var f = new FishermansFriend();
+</script>
+</head>
+<body>
+<div id="mainmenu" class="w3-content w3-display-container" style="display:block;width:100%;height:300px;">
+	<div class="w3-panel">
+		<h2>Tallózás</h2>	
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._browse('byName');">Halak név szerint</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._browse('byCategory');">Halak kategórák szerint</button></p>
+	</div>
+	<div class="w3-panel">
+		<h2>Tesztek</h2>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Halak felismerése</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Tilalmi időszakok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Méretkorlátok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Mennyiségi korlátok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Minden adat</button></p>
+	</div>
+	<div class="w3-display-bottom w3-small w3-padding-tiny" style="text-align:justify;">Az adatokat a <a href="https://www.nebih.gov.hu/data/cms/164/591/Horgaszvizsgara_valo_felkeszulest_segito_tankonyv_1.4.pdf" target="_blank">NÉBIH horgászvizsgára felkészítő tankönyvéből</a> és a Wikipédia magyar oldalairól gyűjtöttem. A képeket is a tankönyvből másoltam ki, melyek <span style="font-style:italic;">Dr. Harka Ákos</span> felvételei.</div>
+</div>
+<div id="learn" class="w3-content w3-display-container" style="display:none;">
+	<a class="w3-btn-floating w3-opacity-max w3-hover-dark-grey w3-display-left w3-small" onclick="f._prev();">&#10094</a>
+	<div class="w3-display-container mySlides">
+		<img id="home" class="w3-display-topright" src="kepek/house.png" onclick="f._home();" style="cursor:pointer;z-index:1000;"></img>
+		<img id="fishImage" style="width:100%"></img>
+		<div id="details" class="w3-display-topleft w3-white w3-opacity w3-text-color-black w3-small" style="width:100%;padding:15px 0px 0px 5px;"></div>
+		<div style="z-index:999;width:90%;" id="hu_name" class="w3-display-topleft w3-container w3-small"></div>
+	</div>
+	<a class="w3-btn-floating w3-opacity-max w3-hover-dark-grey w3-display-right w3-small" onclick="f._next();">&#10095</a>
+</div>
+<div id="quiz" class="w3-content w3-display-container" style="display:none">
+	<div class="w3-display-container mySlides">
+		<img id="info" src="kepek/amur.png" style="width:100%">
+		<div style="z-index:999;" id="hu_name" class="w3-display-topmiddle w3-container w3-black w3-xxlarge"></div>
+		<div style="width:100%" id="size_limit" class="w3-display-topright w3-container w3-black"></div>
+	</div>	
+</div>
+<script type="text/javascript">
+	f._getElements();
+</script>
+<body>
+</html>
