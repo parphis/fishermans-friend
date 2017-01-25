@@ -21,7 +21,9 @@
 	</div>
 	<div class="w3-panel">
 		<h2>Tesztek</h2>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name');">Halak felismerése</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name', quizTypes[0]);">Melyik ez a hal?</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name', quizTypes[1]);">Mi a hal neve?</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('category', quizTypes[0]);">Kategóriák</button></p>
 		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('close_season_start:close_season_end');">Tilalmi időszakok</button></p>
 		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('size_limit');">Méretkorlátok</button></p>
 		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('qty_limit');">Mennyiségi korlátok</button></p>
@@ -43,7 +45,8 @@
 	<div class="w3-display-container mySlides">
 		<img id="home" class="w3-display-topright" src="kepek/house.png" onclick="f._home();" style="cursor:pointer;z-index:1000;"></img>
 		<img id="quizImage" style="width:100%">
-		<div id="answers" class="w3-display-topleft"></div>
+		<div id="answers" class="w3-display-topmiddle" style="width:100%"></div>
+		<div id="nextQuestion" class="w3-btn w3-white w3-border s3-border-green w3-display-middle" style="top:90%;display:none;" onclick="f.getRandomElement()">Következő kérdés</div>
 	</div>	
 </div>
 <script type="text/javascript">
