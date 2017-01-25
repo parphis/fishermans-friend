@@ -1,8 +1,9 @@
-quizTypes = {
+var version = "Version 0.1 &copy;Istvan Vig 2017. <a href='http://parphis.hu' target='_blank'>parphis.hu</a>";
+var quizTypes = {
 	0: "choices",
 	1: "freetext"
 };
-function FishermansFriend() {
+function FishermansFriend() {                      
 	// data of the fishes
 	this._fishes = _fishlist;
 	this._countOfFishes = Object.keys(_fishlist).length;
@@ -33,6 +34,8 @@ function FishermansFriend() {
 	this._textNoParam = "nincs";
 	this._textCentimeter = "cm";
 	this._textQuantity = "db/nap";
+	this._textNoLimit = "Nincs korlátozás";
+	this._textProtected = "Védett";
 
 	this._newLine = "<br/>";
 
@@ -57,6 +60,12 @@ function FishermansFriend() {
 	this._btnDefaultClass = "w3-btn w3-tiny w3-white w3-border w3-border-blue";
 	this._btnRightClass = "w3-btn w3-tiny w3-green w3-border w3-border-blue";
 	this._btnFalseClass = "w3-btn w3-tiny w3-red w3-border w3-border-blue";
+	this._uniqueCloseSeasons = Array();
+	this._uCloseSeasonsCount;
+	this._uniqueSizeLimits = Array();
+	this._uSizeLimitsCount;
+	this._uniqueQtyLimits = Array();
+	this._uQtyLimits;
 
 	var self;
 }
@@ -78,6 +87,35 @@ FishermansFriend.prototype = {
 			this._quizImageEl = document.getElementById("quizImage");
 			this._nextQuestionEl = document.getElementById("nextQuestion");
 		}
+	},
+
+	__init: function () {
+		this._getElements();
+		
+		var ic = is = iq = 0;
+		for(i=0; i<this._countOfFishes; i++) {
+			var cs = this._fishes[i]["close_season_start"]+" - "+this._fishes[i]["close_season_end"];
+			var sl = this._fishes[i]["size_limit"];
+			var ql = this._fishes[i]["qty_limit"];
+
+			if(this._uniqueCloseSeasons.indexOf(cs)==-1) {
+				this._uniqueCloseSeasons[ic] = cs;
+				ic++;
+			}
+			if(this._uniqueSizeLimits.indexOf(sl)==-1) {
+				this._uniqueSizeLimits[is] = sl;
+				is++;
+			}
+			if(this._uniqueQtyLimits.indexOf(ql)==-1) {
+				this._uniqueQtyLimits[iq] = ql;
+				iq++;
+			}
+		}
+		this._uCloseSeasonsCount = Object.keys(this._uniqueCloseSeasons).length;
+		this._uSizeLimitsCount = Object.keys(this._uniqueSizeLimits).length;
+		this._uQtyLimitsCount =	Object.keys(this._uniqueQtyLimits).length;
+
+		document.getElementById("version").innerHTML = version;
 	},
 
 	// show mainmenu and hide all the others
@@ -130,7 +168,7 @@ FishermansFriend.prototype = {
 		
 		this._whatToTest = what;
 		this._quizType = type;
-		this.getRandomElement();
+		this._getRandomElement();
 	},
 
 	_prev: function () {
@@ -159,7 +197,7 @@ FishermansFriend.prototype = {
 		return Math.floor(Math.random()*max);
 	},
 
-	getRandomElement: function () {
+	_getRandomElement: function () {
 		var rnd = this.randomize(this._countOfFishes);
 		self = this;
 		self._quizData.length = 0;
@@ -222,6 +260,15 @@ FishermansFriend.prototype = {
 	  return str.join('');
 	},
 
+	isFishProtected: function (cat) {
+		if(cat==4) {
+			return self._textProtected;
+		}
+		else {
+			return self._textNoLimit;
+		}
+	},
+
 	generateImageFileName: function (hu_name) {
 		this._fishImage = this._fishImageFolder;
 		this._fishImage += this.removeAccents(hu_name.toLowerCase());
@@ -267,16 +314,24 @@ FishermansFriend.prototype = {
 		// choices tests
 		if(self._quizType==quizTypes[0]) {
 			var limit = 0;
-			if(self._whatToTest=="hu_name") {
+			if( (self._whatToTest=="hu_name") || (self._whatToTest=="close_season") || (self._whatToTest=="size_limit") || (self._whatToTest=="qty_limit") ) {
 				// reorder the possible answers array randomly
 				var rnd = self.randomize(self._possibleAnswers);
 				var tmp = "";
 				limit = self._possibleAnswers;
 
-				self._rightAnswer = rnd;
-				tmp = self._quizData[rnd];
-				self._quizData[rnd] = self._quizData[0];
-				self._quizData[0] = tmp;
+				// because the quantity limits contains only 2 kind of data 0 or 3.
+				// and no need the randomize process as well
+				if(self._whatToTest=="qty_limit") {
+					limit--;
+					self._rightAnswer = 0;
+				}
+				else {
+					self._rightAnswer = rnd;
+					tmp = self._quizData[rnd];
+					self._quizData[rnd] = self._quizData[0];
+					self._quizData[0] = tmp;
+				}
 			}
 			if(self._whatToTest=="category") {
 				limit = self._categoryCount;
@@ -302,6 +357,7 @@ FishermansFriend.prototype = {
 			inp.id = "freetext";
 			inp.addEventListener("keyup", self.checkIt);
 			self._answersEl.appendChild(inp);
+			inp.focus();
 		}
 	},
 
@@ -328,9 +384,80 @@ FishermansFriend.prototype = {
 				}
 				self.displayQuizData();
 			}
-			if(self._whatToTest=="category") {
+			else if(self._whatToTest=="category") {
 				for(i=0; (i<self._categoryCount); i++) {
 					self._quizData[i] = cts[i];
+				}
+				self.displayQuizData();
+			}
+			else if(self._whatToTest=="close_season") {
+				var i = 0;
+				// avoid infinite loop when checking the random names for multiplications
+				var tries = 0;
+				var max_tries = self._countOfFishes;
+				var str = "";
+
+				for(i=0; (i<self._possibleAnswers) && (tries<max_tries); i++) {
+					var rnd = self.randomize(self._uCloseSeasonsCount);
+					if(i==0) {
+						str = self._oneFish["close_season_start"]+" - "+self._oneFish["close_season_end"];
+					}
+					else {
+						str = self._uniqueCloseSeasons[rnd];
+					}
+					if(str=="0 - 0") {
+						str = self.isFishProtected(self._oneFish["category"]);
+					}
+					if(self._quizData.indexOf(str)>-1) {
+						i--;
+						tries++;
+					}
+					else {
+						self._quizData[i] = str;
+					}
+				}
+				self.displayQuizData();
+			}
+			else if(self._whatToTest=="size_limit") {
+				var i = 0;
+				// avoid infinite loop when checking the random names for multiplications
+				var tries = 0;
+				var max_tries = self._countOfFishes;
+				var str = "";
+
+				for(i=0; (i<self._possibleAnswers) && (tries<max_tries); i++) {
+					var rnd = self.randomize(self._uSizeLimitsCount);
+					if(i==0) {
+						str = self._oneFish["size_limit"];
+					}
+					else {
+						str = self._uniqueSizeLimits[rnd];
+					}
+					if(str=="0") {
+						str = self.isFishProtected(self._oneFish["category"]);
+					}
+					else {
+						str += "cm";
+					}
+					if(self._quizData.indexOf(str)>-1) {
+						i--;
+						tries++;
+					}
+					else {
+						self._quizData[i] = str;
+					}
+				}
+				self.displayQuizData();
+			}
+			else if(self._whatToTest=="qty_limit") {
+				var str = self._oneFish["qty_limit"];
+				if(str=="0") {
+					self._quizData[0] = self.isFishProtected(self._oneFish["category"]);
+					self._quizData[1] = self._uniqueQtyLimits[1];
+				}
+				else {
+					self._quizData[0] = str+"db/nap";
+					self._quizData[1] = self.isFishProtected(self._oneFish["category"]);
 				}
 				self.displayQuizData();
 			}
@@ -364,6 +491,43 @@ FishermansFriend.prototype = {
 				else if(self._whatToTest=="category") {
 					self._nextQuestionEl.innerHTML = self._oneFish["hu_name"]+": "+cts[self._oneFish["category"]];
 				}
+				else if(self._whatToTest=="close_season") {
+					var str = self._oneFish["close_season_start"]+" - "+self._oneFish["close_season_end"];
+					if(str=="0 - 0") {
+						str = "Nincs korlátozás";
+					}
+					self._nextQuestionEl.innerHTML = self._oneFish["hu_name"]+": "+str;
+				}
+				else if(self._whatToTest=="size_limit") {
+					var str = self._oneFish["size_limit"];
+					if(str=="0") {
+						if(self._oneFish["category"]==4) {
+							str = self._textProtected;
+						}
+						else {
+							str = self._textNoLimit;
+						}
+					}
+					else {
+						str += "cm";
+					}
+					self._nextQuestionEl.innerHTML = self._oneFish["hu_name"]+": "+str;
+				}
+				else if(self._whatToTest=="qty_limit") {
+					var str = self._oneFish["qty_limit"];
+					if(str=="0") {
+						if(self._oneFish["category"]==4) {
+							str = self._textProtected;
+						}
+						else {
+							str = self._textNoLimit;
+						}
+					}
+					else {
+						str += "db/nap";
+					}
+					self._nextQuestionEl.innerHTML = self._oneFish["hu_name"]+": "+str;
+				}
 			}
 			self._nextQuestionEl.style.display = "block";
 		}
@@ -377,7 +541,12 @@ FishermansFriend.prototype = {
 					el.style.backgroundColor = "red";
 					self._nextQuestionEl.innerHTML = "A hal neve: "+self._oneFish["hu_name"];
 				}
-				self._nextQuestionEl.style.display = "block";
+				if(self._nextQuestionEl.style.display=="block") {
+					self._getRandomElement();
+				}
+				else {
+					self._nextQuestionEl.style.display = "block";
+				}
 			}
 		}
 	}
