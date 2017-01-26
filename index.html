@@ -21,13 +21,19 @@
 	</div>
 	<div class="w3-panel">
 		<h2>Tesztek</h2>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Halak felismerése</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Tilalmi időszakok</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Méretkorlátok</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Mennyiségi korlátok</button></p>
-		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn();">Minden adat</button></p>
+		<h6>Kattints vagy bökj a képre és add meg a helyes választ!</h6>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name', quizTypes[0]);">Melyik ez a hal?</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('hu_name', quizTypes[1]);">Mi a hal neve?</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('category', quizTypes[0]);">Kategóriák</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('close_season', quizTypes[0]);">Tilalmi időszakok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('size_limit', quizTypes[0]);">Méretkorlátok</button></p>
+		<p><button class="w3-btn-block w3-white w3-border w3-border-blue w3-round w3-large w3-padding-large" onclick="f._learn('qty_limit', quizTypes[0]);">Mennyiségi korlátok</button></p>
 	</div>
 	<div class="w3-display-bottom w3-small w3-padding-tiny" style="text-align:justify;">Az adatokat a <a href="https://www.nebih.gov.hu/data/cms/164/591/Horgaszvizsgara_valo_felkeszulest_segito_tankonyv_1.4.pdf" target="_blank">NÉBIH horgászvizsgára felkészítő tankönyvéből</a> és a Wikipédia magyar oldalairól gyűjtöttem. A képeket is a tankönyvből másoltam ki, melyek <span style="font-style:italic;">Dr. Harka Ákos</span> felvételei.</div>
+	<div class="w3-display-bottom w3-small w3-padding-tiny" style="text-align:justify;">Ajánlott böngészők: <img src="kepek/firefox_32x32.png"></img>49 <img src="kepek/edge_32x32.png"></img>12 <img src="kepek/android_32x32.png"></img>4.4</div>
+	<div class="w3-display-bottom w3-small w3-padding-tiny" style="text-align:justify;">Mobilképernyőn javasolt a fektetett tájolás.</div>
+	<div class="w3-display-bottom w3-small w3-padding-tiny" style="text-align:justify;">Formázás: <a href="http://www.w3schools.com/w3css/default.asp" target="_blank">W3.CSS</a></div>
+	<div id="version" class="w3-display-bottom w3-tiny w3-padding-tiny" style="text-align:justify;"></div>
 </div>
 <div id="learn" class="w3-content w3-display-container" style="display:none;">
 	<a class="w3-btn-floating w3-opacity-max w3-hover-dark-grey w3-display-left w3-small" onclick="f._prev();">&#10094</a>
@@ -41,13 +47,14 @@
 </div>
 <div id="quiz" class="w3-content w3-display-container" style="display:none">
 	<div class="w3-display-container mySlides">
-		<img id="info" src="kepek/amur.png" style="width:100%">
-		<div style="z-index:999;" id="hu_name" class="w3-display-topmiddle w3-container w3-black w3-xxlarge"></div>
-		<div style="width:100%" id="size_limit" class="w3-display-topright w3-container w3-black"></div>
+		<img id="home" class="w3-display-topright" src="kepek/house.png" onclick="f._home();" style="cursor:pointer;z-index:1000;"></img>
+		<img id="quizImage" style="width:100%">
+		<div id="answers" class="w3-display-topmiddle" style="width:100%"></div>
+		<div id="nextQuestion" class="w3-btn w3-white w3-border s3-border-green w3-display-middle" style="top:85%;display:none;" onclick="f._getRandomElement()">Következő kérdés</div>
 	</div>	
 </div>
 <script type="text/javascript">
-	f._getElements();
+	f.__init();
 </script>
 <body>
 </html>

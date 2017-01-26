@@ -6,7 +6,7 @@ var cts = {
 	4: "Védett!"
 };
 var _fishlist = {
-	0: { "hu_name": "AMUR", "latin": "Ctenopharyngodon idella", "habitat": "állóvíz, csatorna", "reproduction": "", "nutrition": "kezdetben planktonok, gerinctelenek, később növényi részek", "category": 2, "common_size": "100", "long_description": "", "close_season_start": "0", "close_season_end": "0", "size_limit": "0", "qty_limit": "0"},
+	0: { "hu_name": "AMUR", "latin": "Ctenopharyngodon idella", "habitat": "állóvíz, csatorna", "reproduction": "", "nutrition": "kezdetben planktonok, gerinctelenek, később növényi részek", "category": 0, "common_size": "100", "long_description": "", "close_season_start": "0", "close_season_end": "0", "size_limit": "0", "qty_limit": "0"},
 	1: {"hu_name": "CSUKA", "latin": "Esox lucius", "habitat": "sekély  állóvíz", "reproduction": "február-március", "nutrition": "ragadozó", "category": 0, "common_size": "100", "long_description": "", "close_season_start": "február 1.", "close_season_end": "március 31.", "size_limit": "40", "qty_limit": "3"},
 	2: {"hu_name": "AMURGÉB", "latin": "Perccottus glenii", "habitat": "növényekkel benőtt sekély  állóvíz", "reproduction": "május-június", "nutrition": "rovarlárvák, halak", "category": 3, "common_size": "20", "long_description": "", "close_season_start": "0", "close_season_end": "0", "size_limit": "0", "qty_limit": "0"},
 	3: {"hu_name": "ANGOLNA", "latin": "Anguilla anguilla", "habitat": "folyók, tenger", "reproduction": "", "nutrition": "ragadozó", "category":3, "common_size": "60", "long_description": "", "close_season_start": "0", "close_season_end": "0", "size_limit": "0", "qty_limit": "0"},
